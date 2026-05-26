@@ -1,0 +1,27 @@
+# Development overrides — no resource caps, live code reload, Redis port exposed
+# This file is automatically merged by Docker Compose in development.
+# In production (Raspberry Pi), use: docker compose -f docker-compose.yml up
+
+services:
+  app:
+    volumes:
+      - ./app:/app/app          # Live code reload
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./keys:/app/keys
+    # Remove resource limits for faster local development
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
+
+  dashboard:
+    volumes:
+      - ./app:/app/app
+      - ./config:/app/config
+      - ./logs:/app/logs
+
+  redis:
+    ports:
+      - "6379:6379"   # Expose Redis port for direct inspection with redis-cli

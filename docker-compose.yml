@@ -1,0 +1,125 @@
+services:
+
+  # ── Honeypot Application ─────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
+    container_name: intellihoneypot-app
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "2222:22"    # SSH honeypot (mapped from 22 inside container)
+      - "8080:80"    # HTTP honeypot (mapped from 80 inside container)
+    volumes:
+      - ./logs:/app/logs        # Persist event logs
+      - ./keys:/app/keys        # Persist SSH host key
+      - ./config:/app/config:ro # Read-only config
+    depends_on:
+      redis:
+        condition: service_healthy
+    # Simulate Raspberry Pi resource constraints
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('localhost',22)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - honeypot-net
+
+  # ── Admin Dashboard ──────────────────────────────────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
+    container_name: intellihoneypot-dashboard
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./logs:/app/logs:ro
+      - ./config:/app/config:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: ["python", "-m", "app.dashboard.app"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - honeypot-net
+
+  # ── Redis (session state + LLM cache) ────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: intellihoneypot-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory 64mb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --appendfsync everysec
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - honeypot-net
+
+  # ── Ollama (optional local LLM — only starts with: docker compose --profile local-llm up) ──
+  ollama:
+    profiles: [local-llm]
+    image: ollama/ollama:latest
+    container_name: intellihoneypot-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    # Pull phi3:mini on first start (runs in background while serve starts)
+    entrypoint: >
+      /bin/sh -c "
+        ollama serve &
+        OLLAMA_PID=$$!
+        sleep 8
+        ollama pull phi3:mini
+        wait $$OLLAMA_PID
+      "
+    deploy:
+      resources:
+        limits:
+          memory: 2G   # Ollama is excluded from Pi simulation constraints
+    networks:
+      - honeypot-net
+
+volumes:
+  redis_data:
+    driver: local
+  ollama_models:
+    driver: local
+
+networks:
+  honeypot-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

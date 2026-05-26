@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Sessions — IntelliHoneypot{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Active Attacker Sessions</h5>
+    <small class="text-muted">Auto-refreshes every 5s</small>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-3">Session ID</th>
+                    <th>IP Address</th>
+                    <th>Service</th>
+                    <th>Phase</th>
+                    <th>Username</th>
+                    <th>CWD</th>
+                    <th>Commands</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody id="sessions-tbody">
+                <tr><td colspan="8" class="text-center text-muted py-4">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function phaseBadge(phase) {
+    const cls = { RECON: 'primary', BRUTE_FORCE: 'warning', EXPLOITATION: 'danger', PERSISTENCE: 'secondary' };
+    return `<span class="badge bg-${cls[phase] || 'secondary'}">${phase}</span>`;
+}
+function duration(start) {
+    const s = Math.floor((Date.now() - new Date(start)) / 1000);
+    if (s < 60) return `${s}s`;
+    if (s < 3600) return `${Math.floor(s/60)}m ${s%60}s`;
+    return `${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m`;
+}
+async function refresh() {
+    const sessions = await fetch('/api/sessions').then(r => r.json());
+    const tbody = document.getElementById('sessions-tbody');
+    if (sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No active sessions</td></tr>';
+        return;
+    }
+    tbody.innerHTML = sessions.map(s => `
+        <tr>
+            <td class="ps-3 font-monospace" style="font-size:0.75rem">${s.session_id.slice(0,8)}…</td>
+            <td><code>${s.attacker_ip}</code></td>
+            <td>${s.service.toUpperCase()}</td>
+            <td>${phaseBadge(s.phase)}</td>
+            <td>${s.username}</td>
+            <td class="font-monospace small">${s.current_dir || '/'}</td>
+            <td>${s.command_count}</td>
+            <td class="text-muted">${duration(s.started_at)}</td>
+        </tr>
+    `).join('');
+}
+refresh();
+setInterval(refresh, 5000);
+</script>
+{% endblock %}

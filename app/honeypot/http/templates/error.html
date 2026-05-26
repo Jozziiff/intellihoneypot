@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Error — Acme Corp VPN{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>GlobalProtect</h1>
+        <p>Acme Corp — Secure VPN Portal</p>
+    </div>
+    <div class="body">
+        <div class="alert alert-info">
+            {{ message | default("An unexpected error occurred. Please try again.") }}
+        </div>
+        <a href="/global-protect/login.esp" class="btn" style="display:block;text-align:center;padding:11px;background:#0070d1;color:white;border-radius:4px;text-decoration:none;">
+            Back to Login
+        </a>
+    </div>
+    <div class="footer">GlobalProtect 5.2.13 &nbsp;|&nbsp; &copy; 2024 Acme Corp IT</div>
+</div>
+{% endblock %}

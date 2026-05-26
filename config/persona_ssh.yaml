@@ -1,0 +1,125 @@
+persona:
+  os: "Ubuntu 20.04.6 LTS"
+  kernel: "5.4.0-182-generic"
+  hostname: "ubuntu-server"
+  arch: "x86_64"
+  default_user: "admin"
+  home_dir: "/home/admin"
+
+banner: "Ubuntu 20.04.6 LTS \\n \\l\n"
+
+motd: |
+  Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-182-generic x86_64)
+
+   * Documentation:  https://help.ubuntu.com
+   * Management:     https://landscape.canonical.com
+   * Support:        https://ubuntu.com/advantage
+
+  System information as of {datetime}
+
+    System load:  0.12               Processes:             142
+    Usage of /:   41.3% of 19.21GB   Users logged in:       0
+    Memory usage: 38%                IPv4 address for eth0: 10.0.1.10
+    Swap usage:   0%
+
+  0 updates can be applied immediately.
+
+  Last login: {last_login} from {last_ip}
+
+prompt_template: "{username}@{hostname}:{cwd}$ "
+
+static_responses:
+  whoami: "{username}"
+  hostname: "ubuntu-server"
+  uname:
+    "-a": "Linux ubuntu-server 5.4.0-182-generic #202-Ubuntu SMP Fri Apr 26 12:29:36 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux"
+    "-r": "5.4.0-182-generic"
+    "-s": "Linux"
+    "-n": "ubuntu-server"
+    "-m": "x86_64"
+    "": "Linux"
+  id: "uid=1000({username}) gid=1000({username}) groups=1000({username}),27(sudo),4(adm)"
+  env: |
+    SHELL=/bin/bash
+    TERM=xterm-256color
+    USER={username}
+    LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+    PWD={cwd}
+    HOME=/home/admin
+    LOGNAME={username}
+    LESSOPEN=| /usr/bin/lesspipe %s
+    LESSCLOSE=/usr/bin/lesspipe %s %s
+  uptime: " {time} up {updays} days, {uphours}:{upmins}, 1 user, load average: 0.12, 0.08, 0.05"
+  df:
+    "-h": |
+      Filesystem      Size  Used Avail Use% Mounted on
+      /dev/sda1        20G  8.1G   11G  43% /
+      tmpfs           4.0G     0  4.0G   0% /dev/shm
+      /dev/sda15      105M  5.3M  100M   5% /boot/efi
+    "": |
+      Filesystem     1K-blocks    Used Available Use% Mounted on
+      /dev/sda1       20511312 8437248  10957248  44% /
+      tmpfs            4087824       0   4087824   0% /dev/shm
+  free:
+    "-h": |
+      total         used        free      shared  buff/cache   available
+      Mem:          7.8G        2.1G        2.4G        221M        3.3G        5.2G
+      Swap:         2.0G          0B        2.0G
+    "-m": |
+      total         used        free      shared  buff/cache   available
+      Mem:           7983        2143        2419         221        3420        5368
+      Swap:          2047           0        2047
+  w: |
+    {time} up {updays} days, {uphours}:{upmins}, 1 user, load average: 0.12, 0.08, 0.05
+    USER     TTY      FROM             LOGIN@   IDLE JCPU   PCPU WHAT
+    admin    pts/0    {attacker_ip}    {login}   0.00s  0.08s  0.01s w
+  last: |
+    admin    pts/0        {attacker_ip}     {login}   still logged in
+    admin    pts/0        10.0.1.15        Mon May 20 04:02   still logged in
+    reboot   system boot  5.4.0-182-generi Mon May 20 04:01   still running
+    wtmp begins Mon Apr 15 03:22:17 2024
+  netstat:
+    "-tulpn": |
+      Active Internet connections (only servers)
+      Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+      tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      892/sshd
+      tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      1204/nginx
+      tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      1204/nginx
+      tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      1445/mysqld
+      tcp6       0      0 :::22                   :::*                    LISTEN      892/sshd
+  ps:
+    "aux": |
+      USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+      root           1  0.0  0.1 103496 11212 ?        Ss   May20   0:06 /sbin/init
+      root         892  0.0  0.1  72300 10244 ?        Ss   May20   0:00 /usr/sbin/sshd -D
+      www-data    1204  0.0  0.2 151012 20148 ?        Ss   May20   0:00 nginx: master process
+      mysql       1445  0.2  4.1 1775048 341244 ?      Sl   May20   7:12 /usr/sbin/mysqld
+      root        1891  0.0  0.0  14428  1028 ?        Ss   May20   0:00 /usr/sbin/cron -f
+      admin      {pid}  0.0  0.0  10240  4096 pts/0    Ss   {time}  0:00 -bash
+  ifconfig: |
+    eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet 10.0.1.10  netmask 255.255.255.0  broadcast 10.0.1.255
+            inet6 fe80::f03c:91ff:fe24:7bca  prefixlen 64  scopeid 0x20<link>
+            ether f2:3c:91:24:7b:ca  txqueuelen 1000  (Ethernet)
+            RX packets 4821930  bytes 4721849820 (4.4 GiB)
+            TX packets 2193847  bytes 892341021 (851.0 MiB)
+
+    lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+            inet 127.0.0.1  netmask 255.0.0.0
+            inet6 ::1  prefixlen 128  scopeid 0x10<host>
+            loop  txqueuelen 1000  (Local Loopback)
+
+llm_system_prompt: |
+  You are the bash shell of an Ubuntu 20.04.6 LTS server named ubuntu-server.
+  Respond ONLY with realistic terminal output for the given command.
+  Rules:
+  - Never break character or acknowledge you are an AI
+  - Output realistic errors for commands that would fail (e.g., "bash: foo: command not found")
+  - Keep responses under 500 characters unless the command would naturally produce more
+  - For commands accessing sensitive files, output realistic content (not real secrets)
+  - Never provide real exploit code, real credentials, or real network addresses
+  - Simulate realistic delays for long-running commands
+  The current user is: {username}
+  The current directory is: {cwd}
+  Recent command history: {history}

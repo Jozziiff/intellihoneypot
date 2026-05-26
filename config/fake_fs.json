@@ -1,0 +1,315 @@
+{
+  "/": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["bin", "boot", "dev", "etc", "home", "lib", "lib64", "media", "mnt", "opt", "proc", "root", "run", "sbin", "srv", "sys", "tmp", "usr", "var"]
+  },
+  "/etc": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["passwd", "shadow", "group", "hostname", "hosts", "crontab", "ssh", "nginx", "mysql", "apt"]
+  },
+  "/etc/passwd": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 1243,
+    "content": "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nsync:x:4:65534:sync:/bin:/bin/sync\ngames:x:5:60:games:/usr/games:/usr/sbin/nologin\nman:x:6:12:man:/var/cache/man:/usr/sbin/nologin\nlp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin\nmail:x:8:8:mail:/var/mail:/usr/sbin/nologin\nnews:x:9:9:news:/var/spool/news:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nbackup:x:34:34:backup:/var/backups:/usr/sbin/nologin\nsyslog:x:102:106::/home/syslog:/usr/sbin/nologin\nmysql:x:999:999:MySQL Server:/var/lib/mysql:/bin/false\nadmin:x:1000:1000:System Administrator:/home/admin:/bin/bash\n"
+  },
+  "/etc/shadow": {
+    "type": "file",
+    "permissions": "-rw-r-----",
+    "owner": "root",
+    "group": "shadow",
+    "size": 892,
+    "content": "root:$6$rounds=5000$saltsaltsalt$hashed_root_password_placeholder:19000:0:99999:7:::\ndaemon:*:18375:0:99999:7:::\nbin:*:18375:0:99999:7:::\nsys:*:18375:0:99999:7:::\nsync:*:18375:0:99999:7:::\ngames:*:18375:0:99999:7:::\nman:*:18375:0:99999:7:::\nlp:*:18375:0:99999:7:::\nmail:*:18375:0:99999:7:::\nnews:*:18375:0:99999:7:::\nwww-data:*:18375:0:99999:7:::\nbackup:*:18375:0:99999:7:::\nsyslog:*:18375:0:99999:7:::\nmysql:!:19200:0:99999:7:::\nadmin:$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/qPmEzMoim:19200:0:99999:7:::\n"
+  },
+  "/etc/group": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 512,
+    "content": "root:x:0:\ndaemon:x:1:\nbin:x:2:\nsys:x:3:\nadm:x:4:syslog,admin\ntty:x:5:\ndisk:x:6:\nlp:x:7:\nmail:x:8:\nnews:x:9:\nuucp:x:10:\nman:x:12:\nproxy:x:13:\nwww-data:x:33:\nbackup:x:34:\nshadow:x:42:admin\nsudo:x:27:admin\nmysql:x:999:\nadmin:x:1000:\n"
+  },
+  "/etc/hostname": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 13,
+    "content": "ubuntu-server\n"
+  },
+  "/etc/hosts": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 221,
+    "content": "127.0.0.1 localhost\n127.0.1.1 ubuntu-server\n\n# The following lines are desirable for IPv6 capable hosts\n::1     ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\n"
+  },
+  "/etc/crontab": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 312,
+    "content": "# /etc/crontab: system-wide crontab\nSHELL=/bin/sh\nPATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n\n# m h dom mon dow user  command\n17 *  * * *  root  cd / && run-parts --report /etc/cron.hourly\n25 6  * * *  root  test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )\n0  2  * * 0  root  /opt/backup.sh >> /var/log/backup.log 2>&1\n0  3  * * 1  root  /usr/bin/find /tmp -mtime +7 -delete\n"
+  },
+  "/etc/ssh": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["sshd_config", "ssh_host_rsa_key.pub"]
+  },
+  "/etc/ssh/sshd_config": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 456,
+    "content": "# OpenSSH server configuration\nPort 22\nAddressFamily any\nListenAddress 0.0.0.0\nPermitRootLogin no\nPubkeyAuthentication yes\nPasswordAuthentication yes\nPermitEmptyPasswords no\nChallengeResponseAuthentication no\nUsePAM yes\nX11Forwarding no\nPrintMotd no\nAcceptEnv LANG LC_*\nSubsystem sftp /usr/lib/openssh/sftp-server\nAllowUsers admin\nMaxAuthTries 3\nLoginGraceTime 60\n"
+  },
+  "/home": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["admin"]
+  },
+  "/home/admin": {
+    "type": "dir",
+    "permissions": "drwxr-x---",
+    "owner": "admin",
+    "group": "admin",
+    "children": [".ssh", ".bash_history", ".bashrc", ".profile", "notes.txt"]
+  },
+  "/home/admin/.ssh": {
+    "type": "dir",
+    "permissions": "drwx------",
+    "owner": "admin",
+    "group": "admin",
+    "children": ["id_rsa", "id_rsa.pub", "authorized_keys", "known_hosts"]
+  },
+  "/home/admin/.ssh/id_rsa": {
+    "type": "file",
+    "permissions": "-rw-------",
+    "owner": "admin",
+    "group": "admin",
+    "size": 1679,
+    "content": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA0Z3VS5JJcds3xHn/ygWep4ubEFDRMFkNnEGnGb7PZQKBI3JF\nKfXREPNfQcMz3G3AJB2GBfEYAjIvt1Js9hKS8jSVuFuOXlM3lKfJuqPxpGWFl8XA\nDrjFGLBqEBCuALbnHCHLGJQ3BpAe5PpQY3+JWmj9WnURf2xoR7Z5yxNRx2Cefmf0\nKBOK6xVUjZmsPsQZEXEjDSLxfaS0I4CXJM1e9wIDAQABAoIBAC5RgZ+hBx7xHNaM\npPgwGMnCd2vwhJIGiKKmFq9GDKxiGVLV5eMXHFbJdWRSEMYD0fNFPTrElpBWVZA2\naKNpMQOiBbOKomAmIIUCHpnCbvTIJUWLmg8YJdxFepnMn6EQKZS8IH5m0MaSNuRH\nGGWWxWwbSd2OadAx27PuYFqJZ0MNqSTMiMhGP4XfV2n7RQHB0mz7N3vGe3pMHKP9\nLGMiE8mYZRVDy7UOmCQKGVnEL5tuVlD3oBu7k5YRPaFkUVzWS9H9PbDYtMhbQ1KN\njK+aHwNBGP4mLGMjBEJlhM1Q1ZNqk1aaiqr1GJU5ECJiUPM1+fASI0KeQGSGqhEC\nAoGBAoGBAP4yNK9MZ4dn8wQ3ZiBfKmyVleNmV0z9eXPnEtSHkjuIcOsAiAELCFGp\npmG0ERJ3bGJmCOr1sQxWp5MJHd4NJHoR9wJ4dR8a5cG5sLBBCiH5RnQvU7Yzn7EL\naHkMeOz3kYxO1HS7UPM0pW9P7VJsViOZHEkzYrMB1WkbSq1OmcqJAoGBANJf/z2P\nQlXerEgCmSxXP8K7RGZVo5gM1UW+YkiDJSobUgphD0MvHZYTRXgVVTWY7T5Hg1M3\njXWVYekVpNV3P9HuZi6R8jbRFpI4mLLrSOzmQn7lQnTvHjM3rVcCfGiNZJlAZBe6\nCB/+RGHoiYRUzT7nFVKi4nJILmVlcSrPQkYlAoGBAKt5OmPaVVdxn3LqnJCSDCXM\nFuiRgI9NKXM2EZuqvfGLM4mWLRxJFd7ZP3q2UNpH5PqM7fxJ9iB0mXeTKcjsKWPh\nyOR6IaAvHZlS5IXFbwDJJT6Ih5N1tgR8P7Wm+3OQm+2K3vMqYJiCk9M0Y0Ua+CXf\n5GBkAoGAIPm8xJNIiNlg3WcCz3hNxZjl3xsPkYQXbYlMRkEDcx8Z3HrM1qJ2jSrT\nfBF7v0RsUC0iQpv1MJQRH9QLW+7vJHN0nmtEDZjT0rjWMc+RVk6JXqFjADfW5L2N\nLKhHXNj5vJR0f/KDzZMrUSbFqk7GPHZLO4v5tqhMLKlVoSECgYBCqIz3G7QXPQIP\n4Z8NkM7r5P0vUxCJxGKWzPGqMlFkPf6LzJJn4n5h9S3Q9M8Aw0kEJHQc3VFKxMlg\nkOlUQRm1Fj3OGKnA3vWCm9Y5nMkW9XdPIpDEHPBLRlGOoCdtO7hMxN+WzSkHRUyX\nzxHLlqfSQ1JmGwgCVMy1Pw==\n-----END RSA PRIVATE KEY-----\n"
+  },
+  "/home/admin/.ssh/id_rsa.pub": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "admin",
+    "group": "admin",
+    "size": 381,
+    "content": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDRndVLkklx2zfEef/KBZ6ni5sQUNEwWQ2cQacZvs9lAoEjckUp9dEQ819BwzPcbcAkHYYF8RgCMi+3Umz2EpLyNJW4W45eUzeUp8m6o/GkZYWXxcAOuMUYsGoQEK4AtuccIcsYlDcGkB7k+lBjf4laaP1adRF/bGhHtnnLE1HHYIx+Z/QoE4rrFVSNmaw+xBkRcSMNIvF9pLQjgJckzV73 admin@ubuntu-server\n"
+  },
+  "/home/admin/.ssh/authorized_keys": {
+    "type": "file",
+    "permissions": "-rw-------",
+    "owner": "admin",
+    "group": "admin",
+    "size": 381,
+    "content": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDRndVLkklx2zfEef/KBZ6ni5sQUNEwWQ2cQacZvs9lAoEjckUp9dEQ819BwzPcbcAkHYYF8RgCMi+3Umz2EpLyNJW4W45eUzeUp8m6o/GkZYWXxcAOuMUYsGoQEK4AtuccIcsYlDcGkB7k+lBjf4laaP1adRF/bGhHtnnLE1HHYIx+Z/QoE4rrFVSNmaw+xBkRcSMNIvF9pLQjgJckzV73 admin@ubuntu-server\n"
+  },
+  "/home/admin/.ssh/known_hosts": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "admin",
+    "group": "admin",
+    "size": 220,
+    "content": "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw495m+NFHU3x9KNTH8ERiAL47WkRjYz7zFIMCbWnqHQ==\n"
+  },
+  "/home/admin/.bash_history": {
+    "type": "file",
+    "permissions": "-rw-------",
+    "owner": "admin",
+    "group": "admin",
+    "size": 892,
+    "content": "sudo apt update && sudo apt upgrade -y\nsudo systemctl status nginx\nsudo systemctl restart mysql\ncd /var/www/html\nls -la\ncat config.php\nsudo tail -f /var/log/nginx/access.log\ncd /home/admin\nls -la\nssh-keygen -t rsa -b 4096\ncat .ssh/id_rsa.pub\nsudo ufw status\nsudo ufw allow 80/tcp\nsudo ufw allow 443/tcp\nsudo netstat -tulpn\nps aux | grep nginx\nsudo journalctl -u mysql -n 50\ncd /opt\nls\nsudo /opt/backup.sh\nhistory\nsudo find / -name '*.log' -mtime -1\ncrontab -l\nsudo cat /var/log/auth.log | tail -50\nmysql -u root -p\nsudo vim /etc/nginx/sites-available/default\nnginx -t\nsudo systemctl reload nginx\n"
+  },
+  "/home/admin/.bashrc": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "admin",
+    "group": "admin",
+    "size": 421,
+    "content": "# ~/.bashrc: executed by bash(1) for non-login shells.\n\n# If not running interactively, don't do anything\ncase $- in\n    *i*) ;;\n      *) return;;\nesac\n\nHISTCONTROL=ignoreboth\nHISTSIZE=1000\nHISTFILESIZE=2000\n\nalias ll='ls -alF'\nalias la='ls -A'\nalias l='ls -CF'\nalias grep='grep --color=auto'\n\nexport PATH=\"$HOME/.local/bin:$PATH\"\nexport EDITOR=vim\n"
+  },
+  "/home/admin/notes.txt": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "admin",
+    "group": "admin",
+    "size": 198,
+    "content": "TODO:\n- Renew SSL cert before Dec 2024\n- Update MySQL root password (still using old one from setup)\n- Ask IT about VPN access for remote work\n- Review fail2ban config\n- Backup script needs testing\n\nMySQL: admin / Adm1n#2021!\n"
+  },
+  "/var": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["www", "log", "lib", "backups", "cache", "spool"]
+  },
+  "/var/www": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "www-data",
+    "group": "www-data",
+    "children": ["html"]
+  },
+  "/var/www/html": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "www-data",
+    "group": "www-data",
+    "children": ["index.php", "config.php", "wp-config.php", ".htaccess"]
+  },
+  "/var/www/html/index.php": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "www-data",
+    "group": "www-data",
+    "size": 89,
+    "content": "<?php\n// Corporate internal portal\nheader('Location: /dashboard');\nexit();\n?>\n"
+  },
+  "/var/www/html/config.php": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "www-data",
+    "group": "www-data",
+    "size": 342,
+    "content": "<?php\n// Database configuration - DO NOT COMMIT\ndefine('DB_HOST', 'localhost');\ndefine('DB_NAME', 'corporate_db');\ndefine('DB_USER', 'webapp');\ndefine('DB_PASSWORD', 'Str0ng@DB#2021');\ndefine('DB_CHARSET', 'utf8mb4');\n\n// SMTP configuration\ndefine('SMTP_HOST', 'smtp.internal.acme.com');\ndefine('SMTP_USER', 'noreply@acme.com');\ndefine('SMTP_PASS', 'Email@Smtp#99!');\ndefine('SMTP_PORT', 587);\n?>\n"
+  },
+  "/var/www/html/wp-config.php": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "www-data",
+    "group": "www-data",
+    "size": 512,
+    "content": "<?php\n/**\n * WordPress base configuration\n */\ndefine( 'DB_NAME', 'wordpress_db' );\ndefine( 'DB_USER', 'wp_user' );\ndefine( 'DB_PASSWORD', 'WpD@tabase!2022' );\ndefine( 'DB_HOST', 'localhost' );\ndefine( 'DB_CHARSET', 'utf8' );\ndefine( 'DB_COLLATE', '' );\ndefine( 'AUTH_KEY',         'put your unique phrase here' );\ndefine( 'SECURE_AUTH_KEY',  'put your unique phrase here' );\n$table_prefix = 'wp_';\nif ( ! defined( 'ABSPATH' ) ) {\n    define( 'ABSPATH', __DIR__ . '/' );\n}\nrequire_once ABSPATH . 'wp-settings.php';\n"
+  },
+  "/var/www/html/.htaccess": {
+    "type": "file",
+    "permissions": "-rw-r--r--",
+    "owner": "www-data",
+    "group": "www-data",
+    "size": 156,
+    "content": "# Apache configuration\nOptions -Indexes\nRewriteEngine On\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\n\n<Files config.php>\n  order allow,deny\n  deny from all\n</Files>\n"
+  },
+  "/var/log": {
+    "type": "dir",
+    "permissions": "drwxrwxr-x",
+    "owner": "root",
+    "group": "syslog",
+    "children": ["auth.log", "syslog", "nginx", "mysql", "backup.log"]
+  },
+  "/var/log/auth.log": {
+    "type": "file",
+    "permissions": "-rw-r-----",
+    "owner": "syslog",
+    "group": "adm",
+    "size": 4218,
+    "content": "May 20 03:14:22 ubuntu-server sshd[8821]: Failed password for invalid user admin from 185.220.101.42 port 52341 ssh2\nMay 20 03:14:24 ubuntu-server sshd[8821]: Failed password for invalid user admin from 185.220.101.42 port 52342 ssh2\nMay 20 03:14:26 ubuntu-server sshd[8821]: Failed password for invalid user root from 185.220.101.42 port 52343 ssh2\nMay 20 03:15:01 ubuntu-server sshd[8822]: Failed password for invalid user ubuntu from 198.51.100.77 port 41221 ssh2\nMay 20 03:15:03 ubuntu-server sshd[8822]: Failed password for invalid user pi from 198.51.100.77 port 41222 ssh2\nMay 20 03:15:05 ubuntu-server sshd[8823]: Failed password for invalid user test from 198.51.100.77 port 41225 ssh2\nMay 20 04:02:11 ubuntu-server sshd[9001]: Accepted password for admin from 10.0.1.15 port 55210 ssh2\nMay 20 04:02:11 ubuntu-server sshd[9001]: pam_unix(sshd:session): session opened for user admin by (uid=0)\nMay 20 06:31:45 ubuntu-server sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt update\nMay 20 06:35:12 ubuntu-server sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx\nMay 21 01:07:33 ubuntu-server sshd[10234]: Failed password for invalid user admin from 222.186.42.117 port 33291 ssh2\nMay 21 01:07:35 ubuntu-server sshd[10234]: Failed password for invalid user root from 222.186.42.117 port 33292 ssh2\nMay 21 01:07:37 ubuntu-server sshd[10234]: Failed password for invalid user oracle from 222.186.42.117 port 33293 ssh2\nMay 21 01:07:39 ubuntu-server sshd[10234]: Failed password for invalid user postgres from 222.186.42.117 port 33294 ssh2\nMay 21 01:07:41 ubuntu-server sshd[10234]: Failed password for invalid user mysql from 222.186.42.117 port 33295 ssh2\nMay 21 01:07:43 ubuntu-server sshd[10234]: Failed password for invalid user user from 222.186.42.117 port 33296 ssh2\nMay 21 01:07:45 ubuntu-server sshd[10235]: Failed password for invalid user deploy from 222.186.42.117 port 33297 ssh2\nMay 21 01:07:47 ubuntu-server sshd[10235]: Failed password for invalid user git from 222.186.42.117 port 33298 ssh2\nMay 21 02:44:19 ubuntu-server sshd[10890]: Accepted publickey for admin from 10.0.1.15 port 59122 ssh2\nMay 21 08:15:02 ubuntu-server CRON[11002]: (root) CMD (/opt/backup.sh >> /var/log/backup.log 2>&1)\nMay 22 00:03:17 ubuntu-server sshd[12341]: Failed password for invalid user admin from 91.240.118.52 port 28811 ssh2\nMay 22 00:03:19 ubuntu-server sshd[12341]: Failed password for invalid user root from 91.240.118.52 port 28812 ssh2\nMay 22 00:03:21 ubuntu-server sshd[12341]: Failed password for invalid user nagios from 91.240.118.52 port 28813 ssh2\nMay 22 00:03:23 ubuntu-server sshd[12342]: Failed password for invalid user jenkins from 91.240.118.52 port 28814 ssh2\nMay 22 00:03:25 ubuntu-server sshd[12342]: Failed password for invalid user ansible from 91.240.118.52 port 28815 ssh2\nMay 22 09:22:41 ubuntu-server sudo: admin : TTY=pts/1 ; PWD=/var/www/html ; USER=root ; COMMAND=/usr/bin/vim /etc/nginx/sites-available/default\nMay 23 14:51:03 ubuntu-server sshd[15001]: Accepted password for admin from 10.0.1.15 port 61234 ssh2\nMay 24 03:19:44 ubuntu-server sshd[16221]: Failed password for invalid user admin from 103.99.0.122 port 44123 ssh2\nMay 24 03:19:46 ubuntu-server sshd[16221]: Failed password for invalid user root from 103.99.0.122 port 44124 ssh2\nMay 24 03:19:48 ubuntu-server sshd[16221]: Failed password for invalid user 1234 from 103.99.0.122 port 44125 ssh2\nMay 24 03:19:50 ubuntu-server sshd[16222]: Failed password for invalid user test from 103.99.0.122 port 44126 ssh2\n"
+  },
+  "/var/log/syslog": {
+    "type": "file",
+    "permissions": "-rw-r-----",
+    "owner": "syslog",
+    "group": "adm",
+    "size": 1024,
+    "content": "May 24 00:00:01 ubuntu-server CRON[20001]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nMay 24 06:25:02 ubuntu-server CRON[20102]: (root) CMD (test -x /usr/sbin/anacron)\nMay 24 08:00:01 ubuntu-server systemd[1]: Starting Daily apt download activities...\nMay 24 08:00:12 ubuntu-server systemd[1]: Finished Daily apt download activities.\nMay 24 12:00:01 ubuntu-server CRON[22341]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nMay 24 18:15:33 ubuntu-server kernel: [UFW BLOCK] IN=eth0 OUT= SRC=185.220.101.42 DST=10.0.1.10 LEN=60 TOS=0x00 PREC=0x00 TTL=49 ID=0 DF PROTO=TCP SPT=43211 DPT=22 WINDOW=64240 RES=0x00 SYN URGP=0\n"
+  },
+  "/opt": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["backup.sh", "monitor.py"]
+  },
+  "/opt/backup.sh": {
+    "type": "file",
+    "permissions": "-rwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "size": 312,
+    "content": "#!/bin/bash\n# Daily backup script\nBACKUP_DIR=\"/var/backups/daily\"\nDATE=$(date +%Y%m%d)\nDB_USER=\"backup_user\"\nDB_PASS=\"B@ckup#Secr3t\"\n\nmkdir -p $BACKUP_DIR\nmysqldump -u $DB_USER -p$DB_PASS corporate_db > $BACKUP_DIR/corporate_db_$DATE.sql\ntar -czf $BACKUP_DIR/www_$DATE.tar.gz /var/www/html/\nfind $BACKUP_DIR -mtime +30 -delete\necho \"Backup completed: $(date)\" >> /var/log/backup.log\n"
+  },
+  "/proc": {
+    "type": "dir",
+    "permissions": "dr-xr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["1", "cpuinfo", "meminfo", "version", "uptime"]
+  },
+  "/proc/version": {
+    "type": "file",
+    "permissions": "-r--r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 155,
+    "content": "Linux version 5.4.0-182-generic (buildd@lcy02-amd64-059) (gcc version 9.4.0 (Ubuntu 9.4.0-1ubuntu1~20.04.2)) #202-Ubuntu SMP Fri Apr 26 12:29:36 UTC 2024\n"
+  },
+  "/proc/uptime": {
+    "type": "file",
+    "permissions": "-r--r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 20,
+    "content": "1842736.42 7231044.12\n"
+  },
+  "/proc/cpuinfo": {
+    "type": "file",
+    "permissions": "-r--r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 512,
+    "content": "processor\t: 0\nvendor_id\t: GenuineIntel\ncpu family\t: 6\nmodel\t\t: 142\nmodel name\t: Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz\nstepping\t: 10\nmicrocode\t: 0xea\ncpu MHz\t\t: 1800.000\ncache size\t: 6144 KB\nphysical id\t: 0\nsiblings\t: 4\ncpu cores\t: 2\nbogomips\t: 3600.00\n"
+  },
+  "/proc/meminfo": {
+    "type": "file",
+    "permissions": "-r--r--r--",
+    "owner": "root",
+    "group": "root",
+    "size": 256,
+    "content": "MemTotal:        8175648 kB\nMemFree:         2134512 kB\nMemAvailable:    4812340 kB\nBuffers:          312480 kB\nCached:          2891044 kB\nSwapCached:            0 kB\nSwapTotal:       2097148 kB\nSwapFree:        2097148 kB\n"
+  },
+  "/usr": {
+    "type": "dir",
+    "permissions": "drwxr-xr-x",
+    "owner": "root",
+    "group": "root",
+    "children": ["bin", "sbin", "lib", "local", "share"]
+  },
+  "/tmp": {
+    "type": "dir",
+    "permissions": "drwxrwxrwt",
+    "owner": "root",
+    "group": "root",
+    "children": []
+  },
+  "/root": {
+    "type": "dir",
+    "permissions": "drwx------",
+    "owner": "root",
+    "group": "root",
+    "children": [".bashrc", ".bash_history"]
+  },
+  "/root/.bash_history": {
+    "type": "file",
+    "permissions": "-rw-------",
+    "owner": "root",
+    "group": "root",
+    "size": 312,
+    "content": "apt update && apt upgrade -y\nufw enable\nufw allow 22/tcp\nufw allow 80/tcp\nufw allow 443/tcp\nfail2ban-client status\nfail2ban-client status sshd\ncat /var/log/fail2ban.log\nmysql -u root\nvisudo\ncrontab -e\nsystemctl list-units --failed\njournalctl -p err -b\n"
+  }
+}

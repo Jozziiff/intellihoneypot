@@ -1,0 +1,147 @@
+persona:
+  product: "Palo Alto GlobalProtect"
+  version: "5.2.13-c217"
+  company: "Acme Corp IT"
+  portal_title: "Acme Corp VPN Portal"
+  support_email: "it-support@acme.com"
+
+response_headers:
+  Server: "Apache/2.4.41 (Ubuntu)"
+  X-Powered-By: "PHP/7.4.3"
+  X-Frame-Options: "SAMEORIGIN"
+  X-Content-Type-Options: "nosniff"
+  X-XSS-Protection: "1; mode=block"
+  Referrer-Policy: "strict-origin-when-cross-origin"
+
+routes:
+  - path: "/"
+    handler: "redirect_login"
+    redirect_to: "/global-protect/login.esp"
+
+  - path: "/global-protect/login.esp"
+    handler: "login_page"
+    methods: ["GET", "POST"]
+
+  - path: "/ssl-vpn/prelogin.esp"
+    handler: "prelogin_xml"
+    methods: ["GET", "POST"]
+
+  - path: "/global-protect/portal/prelogin.esp"
+    handler: "prelogin_xml"
+    methods: ["GET", "POST"]
+
+  - path: "/global-protect/portal/config.esp"
+    handler: "portal_config_xml"
+    methods: ["GET", "POST"]
+
+  - path: "/robots.txt"
+    handler: "robots_txt"
+    methods: ["GET"]
+
+  - path: "/favicon.ico"
+    handler: "favicon"
+    methods: ["GET"]
+
+  - path: "/global-protect/portal/css/login.css"
+    handler: "static_css"
+    methods: ["GET"]
+
+mfa_challenge:
+  enabled: true
+  message: "A verification code has been sent to your registered mobile device."
+  field_label: "Enter Verification Code"
+
+prelogin_xml: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <prelogin-response>
+    <status>Success</status>
+    <ccusername/>
+    <autosubmit>false</autosubmit>
+    <msg/>
+    <newmsg/>
+    <authentication-message>Please enter your username and password</authentication-message>
+    <username-label>Username</username-label>
+    <password-label>Password</password-label>
+    <panos-version>9.1.3</panos-version>
+    <region>US</region>
+  </prelogin-response>
+
+portal_config_xml: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <policy>
+    <version>8</version>
+    <gateways>
+      <external>
+        <list>
+          <entry name="acme-vpn-gw.acme.com">
+            <priority>1</priority>
+            <manual>0</manual>
+          </entry>
+        </list>
+      </external>
+    </gateways>
+  </policy>
+
+scanner_paths:
+  - /admin
+  - /admin/
+  - /administrator
+  - /phpmyadmin
+  - /phpmyadmin/
+  - /.git/HEAD
+  - /.git/config
+  - /wp-login.php
+  - /wp-admin
+  - /xmlrpc.php
+  - /.env
+  - /.env.bak
+  - /config.php
+  - /web.config
+  - /backup.zip
+  - /backup.tar.gz
+  - /db.sql
+  - /database.sql
+  - /shell.php
+  - /cmd.php
+  - /c99.php
+  - /r57.php
+  - /info.php
+  - /phpinfo.php
+  - /test.php
+  - /debug.php
+  - /console
+  - /actuator
+  - /actuator/env
+  - /actuator/health
+  - /api/v1/users
+  - /.htpasswd
+  - /cgi-bin/
+  - /server-status
+  - /server-info
+
+credential_capture:
+  username_fields: ["user", "username", "email", "userid", "j_username", "uname"]
+  password_fields: ["password", "passwd", "pass", "pwd", "j_password", "secret"]
+  log_user_agent: true
+  log_headers: ["X-Forwarded-For", "X-Real-IP", "User-Agent", "Referer"]
+
+fake_error_pages:
+  404:
+    title: "Not Found"
+    body: "The requested URL was not found on this server."
+  403:
+    title: "Forbidden"
+    body: "You don't have permission to access this resource."
+  500:
+    title: "Internal Server Error"
+    body: "The server encountered an internal error and was unable to complete your request."
+
+llm_system_prompt: |
+  You are a Palo Alto GlobalProtect VPN web portal for Acme Corp.
+  Generate realistic HTTP responses for the given request path and parameters.
+  Rules:
+  - Stay in character as a corporate VPN portal
+  - Return plausible error messages for invalid requests
+  - Never reveal that you are an AI or a honeypot
+  - For login attempts, always return a "MFA required" challenge after first submission
+  - Keep JSON/XML responses well-formed and realistic
