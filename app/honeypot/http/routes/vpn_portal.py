@@ -28,6 +28,7 @@ from fastapi.templating import Jinja2Templates
 from app.core.logging import get_logger
 from app.session.manager import SessionManager
 from app.session.models import AttackPhase, CapturedCredential, SessionEvent
+from app.telemetry.event_logger import EventLogger
 
 logger = get_logger(__name__)
 router = APIRouter()
@@ -67,7 +68,9 @@ _PORTAL_CONFIG_XML = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 def setup_vpn_router(
-    templates: Jinja2Templates, session_mgr: SessionManager
+    templates: Jinja2Templates,
+    session_mgr: SessionManager,
+    event_logger: EventLogger,
 ) -> APIRouter:
     """
     Factory wires the SessionManager into closures.
@@ -82,6 +85,21 @@ def setup_vpn_router(
 
     @router.get("/global-protect/login.esp", include_in_schema=False)
     async def login_page(request: Request) -> HTMLResponse:
+        client_ip = (
+            request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+            or (request.client.host if request.client else "unknown")
+        )
+        session = await session_mgr.create(client_ip, "http")
+        session.user_agent = request.headers.get("user-agent", "")
+        await session_mgr.update(session)
+
+        await event_logger.log(
+            session,
+            "http_page_view",
+            request.url.path,
+            summary="HTTP honeypot page viewed",
+        )
+
         return templates.TemplateResponse(request, "login.html")
 
     @router.post("/global-protect/login.esp", include_in_schema=False)
@@ -124,6 +142,13 @@ def setup_vpn_router(
                 phase=AttackPhase.EXPLOITATION,
             )
             await session_mgr.append_event(session.session_id, event)
+
+            await event_logger.log(
+                session,
+                "http_login_attempt",
+                event.payload,
+                summary="HTTP login attempt captured",
+            )
 
             logger.warning(
                 "http_credential_captured",

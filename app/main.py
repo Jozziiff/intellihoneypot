@@ -73,7 +73,7 @@ async def main() -> None:
 
     # ── Service Factories ─────────────────────────────────────────────────────
     ssh_transport = TransportManager(session_mgr, fs, llm, host_key)
-    http_app = create_http_app(session_mgr, llm)
+    http_app = create_http_app(session_mgr, llm, event_logger)
     dashboard_app = create_dashboard_app(session_mgr)
 
     http_config = uvicorn.Config(

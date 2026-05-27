@@ -21,6 +21,7 @@ RUN pip install --no-cache-dir -e "." 2>/dev/null || \
         "redis[hiredis]" \
         structlog \
         httpx \
+        requests \
         bcrypt \
         jinja2 \
         python-multipart \

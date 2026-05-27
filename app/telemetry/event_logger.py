@@ -10,6 +10,7 @@ from app.session.models import AttackPhase, Session, SessionEvent
 from app.telemetry.cef_formatter import CEFFormatter
 from app.telemetry.classifier import ThreatClassifier
 from app.telemetry.syslog_forwarder import UDPSyslogForwarder
+from app.services.whatsapp_alert_service import send_whatsapp_alert
 
 logger = get_logger(__name__)
 
@@ -57,6 +58,8 @@ class EventLogger:
         cef_msg = self._cef.format(session, event)
         await self._forwarder.send(cef_msg)
 
+        await self._maybe_send_whatsapp_alert(session, event)
+
         logger.info(
             "event_logged",
             session_id=session.session_id,
@@ -66,6 +69,28 @@ class EventLogger:
         )
 
         return event
+
+    async def _maybe_send_whatsapp_alert(self, session: Session, event: SessionEvent) -> None:
+        alert_payload = {
+            "event_type": event.event_type,
+            "payload": event.payload,
+            "attacker_ip": session.attacker_ip,
+            "timestamp": event.timestamp.isoformat(),
+            "severity": "HIGH" if event.phase.severity >= 8 else "MEDIUM" if event.phase.severity >= 6 else "LOW",
+            "summary": event.extra.get("summary", event.payload),
+            "phase": event.phase.value,
+        }
+
+        try:
+            await asyncio.to_thread(send_whatsapp_alert, alert_payload)
+        except Exception as exc:
+            logger.warning(
+                "whatsapp_alert_thread_failed",
+                error=str(exc),
+                session_id=session.session_id,
+                ip=session.attacker_ip,
+            )
+            print(f"WhatsApp alert dispatch failed: {exc}")
 
     async def _write_jsonl(self, session: Session, event: SessionEvent) -> None:
         record = {

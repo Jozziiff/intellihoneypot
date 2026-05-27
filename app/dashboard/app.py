@@ -12,6 +12,7 @@ from starlette.requests import Request
 
 from app.config import settings
 from app.dashboard.routes.credentials import router as creds_router, setup_credentials_router
+from app.dashboard.routes.honeypots import router as honeypots_router, setup_honeypots_router
 from app.dashboard.routes.sessions import router as sessions_router, setup_sessions_router
 from app.dashboard.routes.threats import router as threats_router, setup_threats_router
 from app.session.manager import SessionManager
@@ -33,9 +34,11 @@ def create_dashboard_app(session_mgr: SessionManager) -> FastAPI:
     setup_sessions_router(session_mgr)
     setup_threats_router(session_mgr)
     setup_credentials_router(session_mgr)
+    setup_honeypots_router(session_mgr)
     app.include_router(sessions_router)
     app.include_router(threats_router)
     app.include_router(creds_router)
+    app.include_router(honeypots_router)
 
     # Health check
     @app.get("/health")

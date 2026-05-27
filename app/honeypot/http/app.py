@@ -29,11 +29,16 @@ from app.honeypot.http.routes.vpn_portal import (
 )
 from app.llm.orchestrator import LLMOrchestrator
 from app.session.manager import SessionManager
+from app.telemetry.event_logger import EventLogger
 
 _TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 
-def create_http_app(session_mgr: SessionManager, llm: LLMOrchestrator) -> FastAPI:
+def create_http_app(
+    session_mgr: SessionManager,
+    llm: LLMOrchestrator,
+    event_logger: EventLogger,
+) -> FastAPI:
     app = FastAPI(
         title="Honeypot HTTP",
         # Hide every FastAPI default that would betray our framework.
@@ -51,7 +56,7 @@ def create_http_app(session_mgr: SessionManager, llm: LLMOrchestrator) -> FastAP
     templates = Jinja2Templates(directory=str(_TEMPLATES_DIR))
 
     # Routes — order matters: specific paths before the catch-all.
-    setup_vpn_router(templates, session_mgr)
+    setup_vpn_router(templates, session_mgr, event_logger)
     app.include_router(vpn_router)
     app.include_router(api_mock_router)
     app.include_router(scanner_sink_router)  # catch-all MUST be last
