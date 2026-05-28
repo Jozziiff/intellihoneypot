@@ -7,6 +7,10 @@ keys/host_rsa.pub
 logs/*.jsonl
 logs/*.log
 
+# Benchmark output (keep the dir via .gitkeep, ignore generated results)
+results/*.json
+results/*.csv
+
 # Python
 __pycache__/
 *.py[cod]

@@ -1,5 +1,5 @@
 .PHONY: build up down local-llm restart logs logs-all status shell redis-cli test \
-        pull-models cross-build clean help
+        pull-models cross-build clean help seed-cache benchmark gen-key
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 COMPOSE        := docker compose
@@ -131,6 +131,10 @@ clean-logs:
 ## seed-cache: Pre-warm the LLM Redis cache with common commands
 seed-cache:
 	$(COMPOSE) run --rm $(APP_SERVICE) python scripts/seed_redis.py
+
+## benchmark: Compare LLM API backends (taux de réponse + latency metrics)
+benchmark:
+	$(COMPOSE) run --rm $(APP_SERVICE) python scripts/benchmark_llm.py $(ARGS)
 
 ## gen-key: Regenerate the SSH host key
 gen-key:

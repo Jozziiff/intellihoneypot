@@ -9,6 +9,8 @@ services:
       - ./config:/app/config
       - ./logs:/app/logs
       - ./keys:/app/keys
+      - ./scripts:/app/scripts  # Run scripts without rebuilding the image
+      - ./results:/app/results  # Persist benchmark output to the host
     # Remove resource limits for faster local development
     deploy:
       resources:
