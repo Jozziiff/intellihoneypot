@@ -1,8 +1,11 @@
 .PHONY: build up down local-llm restart logs logs-all status shell redis-cli test \
+        test-unit test-integration lint typecheck \
         pull-models cross-build clean help seed-cache benchmark gen-key
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 COMPOSE        := docker compose
+# Test runner uses an extra opt-in compose file (keeps tests out of `make up`).
+COMPOSE_TEST   := docker compose -f docker-compose.yml -f docker-compose.test.yml
 APP_SERVICE    := app
 IMAGE_NAME     := intellihoneypot
 IMAGE_TAG      := latest
@@ -62,17 +65,17 @@ shell:
 redis-cli:
 	$(COMPOSE) exec redis redis-cli
 
-## test: Run the full pytest suite inside the container
+## test: Run the unit test suite (self-contained — no running stack needed)
 test:
-	$(COMPOSE) run --rm $(APP_SERVICE) pytest tests/ -v --tb=short
+	$(COMPOSE_TEST) run --rm --build tests pytest tests/unit/ -v --tb=short
 
-## test-unit: Run only unit tests (no Docker/network required)
+## test-unit: Alias for the unit test suite
 test-unit:
-	$(COMPOSE) run --rm $(APP_SERVICE) pytest tests/unit/ -v
+	$(COMPOSE_TEST) run --rm --build tests pytest tests/unit/ -v --tb=short
 
-## test-integration: Run integration tests
+## test-integration: Run integration tests (needs the stack: run `make up` first)
 test-integration:
-	$(COMPOSE) run --rm $(APP_SERVICE) pytest tests/integration/ -v
+	$(COMPOSE_TEST) run --rm --build -e HONEYPOT_BASE_URL=http://app:80 tests pytest tests/integration/ -v --tb=short
 
 ## lint: Run ruff linter
 lint:

@@ -50,3 +50,24 @@ EXPOSE 22 80
 
 # Entrypoint: the asyncio TaskGroup launcher
 CMD ["python", "-m", "app.main"]
+
+# ── Stage 3: test image ─────────────────────────────────────────────────────────
+# Extends the app image with the test tooling + the test suite. This stage is
+# only built for `make test` (see docker-compose.test.yml) — it is NOT part of
+# the production image, so the Raspberry Pi build stays lean.
+FROM app AS test
+
+# Install the test tools explicitly. We avoid `pip install -e ".[dev]"` because
+# the editable build backend is unreliable in this slim image (the base stage
+# works around the same issue with an explicit package list).
+RUN pip install --no-cache-dir \
+    pytest \
+    pytest-asyncio \
+    pytest-cov \
+    "fakeredis[aioredis]" \
+    respx
+
+COPY tests/ ./tests/
+
+# Default command — unit tests only (fully self-contained, no stack needed).
+CMD ["pytest", "tests/unit/", "-v", "--tb=short"]

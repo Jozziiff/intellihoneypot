@@ -29,7 +29,10 @@ MAX_INPUT_LENGTH = 500  # commands longer than this are almost certainly noise
 # Regex patterns that flag a probable prompt-injection attempt.
 # Add new entries here as new jailbreak techniques appear in the wild.
 _INJECTION_PATTERNS: list[re.Pattern[str]] = [
-    re.compile(r"ignore\s+(previous|above|all|prior)\s+instructions", re.IGNORECASE),
+    # Allow up to 4 filler words between "ignore" and "instructions" so we also
+    # catch phrasings like "ignore all previous instructions" or
+    # "ignore the above instructions", not just "ignore previous instructions".
+    re.compile(r"ignore\s+(?:\w+\s+){0,4}instructions", re.IGNORECASE),
     re.compile(r"forget\s+(everything|your\s+instructions|all\s+instructions)", re.IGNORECASE),
     re.compile(r"(you\s+are|act\s+as|pretend\s+to\s+be|roleplay\s+as)\s+(now\s+)?a", re.IGNORECASE),
     re.compile(r"\bsystem\s+prompt\b", re.IGNORECASE),

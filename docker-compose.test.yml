@@ -1,0 +1,27 @@
+# Test runner — opt-in, NOT auto-merged into `docker compose up`.
+#
+# The Makefile uses it explicitly:
+#   docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm tests
+#
+# Unit tests (tests/unit/) are fully self-contained — they use fakeredis and
+# need no running stack or network. Integration tests (tests/integration/) talk
+# to the live HTTP honeypot, so run `make up` first, then `make test-integration`
+# (which points the tests at the `app` service on the shared network).
+
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test          # the test stage (app image + pytest + test deps)
+    image: intellihoneypot-test
+    container_name: intellihoneypot-tests
+    # Live-mount source + tests so edits don't require an image rebuild.
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+      - ./config:/app/config
+      - ./results:/app/results
+    networks:
+      - honeypot-net        # lets integration tests reach the `app` service
+    command: ["pytest", "tests/unit/", "-v", "--tb=short"]
