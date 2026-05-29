@@ -530,7 +530,7 @@ The app container is capped at `cpus: 0.5` and `memory: 512M` — these limits a
 Network & Telecommunications Engineering
 
 Honeypot architecture · LLM integration  
-SSH emulation · Admin dashboard
+SSH emulation · Admin Dashboard
 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](github.com/Jozziiff)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/youssef-hamdani2)
@@ -547,8 +547,8 @@ SSH emulation · Admin dashboard
 
 Network & Telecommunications Engineering
 
-HTTP honeypot · Telemetry pipeline  
-Frontend dashboard · Testing
+HTTP emulation · Telemetry pipeline  
+Dashboard Features · Testing · Mutli-agent system extension
 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](github.com/onssouidi)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ons-souidi-48a19b24b/)
@@ -569,7 +569,6 @@ Frontend dashboard · Testing
 - **MITRE ATT&CK** — The 4-phase classifier maps to TA0043 (Recon), TA0006 (Credential Access), TA0002 (Execution), TA0003 (Persistence)
 - **ArcSight CEF:0** — Standard used for SIEM-compatible alert formatting
 - **Spitzner, L.** — *Honeypots: Tracking Hackers* (2003)
-- Full bibliography → [`docs/TECHNICAL_REPORT.md`](docs/TECHNICAL_REPORT.md)
 
 ---
 
