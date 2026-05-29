@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4o-mini"
     anthropic_api_key: str = ""
     anthropic_model: str = "claude-haiku-4-5-20251001"
+    
+    n8n_webhook_url: str = ""
 
     # Redis
     redis_url: str = "redis://redis:6379/0"
@@ -52,6 +54,8 @@ class Settings(BaseSettings):
     # Admin Dashboard
     dashboard_port: int = 9000
     dashboard_secret_key: str = "change-me-in-production"
+    dashboard_admin_username: str = ""
+    dashboard_admin_password: str = ""
 
     # Multi-Agent Mesh
     mesh_enabled: bool = False

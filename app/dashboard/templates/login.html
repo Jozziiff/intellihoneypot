@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — IntelliHoneypot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at top, rgba(96, 165, 250, 0.14), transparent 28%),
+                linear-gradient(180deg, #04070f 0%, #070b14 100%);
+            color: #f8fafc;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .login-card {
+            width: min(420px, calc(100% - 1.5rem));
+            background: rgba(16, 20, 31, 0.92);
+            border: 1px solid rgba(71, 85, 105, 0.7);
+            border-radius: 18px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+        }
+
+        .login-card h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .login-card .subtle {
+            color: #94a3b8;
+        }
+
+        .form-control {
+            background: #070b14;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
+        .form-control:focus {
+            background: #070b14;
+            color: #f8fafc;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 0.25rem rgba(96, 165, 250, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #2563eb, #1d4ed8);
+            border: none;
+        }
+
+        .alert-danger {
+            border-color: #ef4444;
+            background: rgba(127, 29, 29, 0.4);
+            color: #fecdd3;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card p-4 p-md-5">
+        <div class="text-center mb-4">
+            <div class="display-6 mb-2">🛡️</div>
+            <h1>Admin Dashboard</h1>
+            <p class="subtle mb-0">Sign in to access the IntelliHoneypot control panel.</p>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger py-2" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" action="/login">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" autocomplete="username" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        </form>
+    </div>
+</body>
+</html>
