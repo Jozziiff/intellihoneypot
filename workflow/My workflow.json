@@ -1,0 +1,108 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Your-webhook-path",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b1e25194-1a01-4696-b4fa-986a182eb1c1",
+      "name": "Webhook",
+      "webhookId": "REDACTED"
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=🚨 *HONEYPOT ALERT* 🚨\n━━━━━━━━━━━━━━━━━━━━\n\n*Type:* {{ $json.body.event_type }}\n*Source IP:* {{ $json.body.ip }}\n*Time:* {{ $json.body.timestamp }}\n*Severity:* {{ $json.body.severity }}\n*Details:* {{ $json.body.details }}\n\n━━━━━━━━━━━━━━━━━━━━\n_IntelliHoneypot SOC System_",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "61261ca3-d6dd-4081-baa1-4bcafdaa40d3",
+      "name": "Send a text message",
+      "webhookId": "REDACTED"
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "YOUR_PHONE_NUMBER_ID",
+        "recipientPhoneNumber": "YOUR_PHONE_NUMBER",
+        "template": "=honeypot_alert|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Webhook').item.json.body.event_type }}"
+                  },
+                  {
+                    "text": "={{ $('Webhook').item.json.body.ip }}"
+                  },
+                  {
+                    "text": "={{ $('Webhook').item.json.body.timestamp }}"
+                  },
+                  {
+                    "text": "={{ $('Webhook').item.json.body.severity }}"
+                  },
+                  {
+                    "text": "={{ $('Webhook').item.json.body.details }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        208
+      ],
+      "id": "1eecfe9a-fdef-4dac-8ed5-94e5f2a0b848",
+      "name": "Send template",
+      "webhookId": "REDACTED"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "REDACTED"
+  },
+  "id": "DpZQKkndQkbLVtLi",
+  "tags": []
+}
