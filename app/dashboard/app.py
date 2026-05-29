@@ -132,9 +132,9 @@ def create_dashboard_app(session_mgr: SessionManager) -> FastAPI:
         )
         return response
 
-    @app.get("/logout")
-    async def logout() -> RedirectResponse:
-        response = RedirectResponse(url="/login", status_code=303)
+    @app.get("/logout", response_class=HTMLResponse)
+    async def logout(request: Request) -> HTMLResponse:
+        response = templates.TemplateResponse(request, "logout.html")
         response.delete_cookie(_SESSION_COOKIE_NAME, path="/")
         return response
 
